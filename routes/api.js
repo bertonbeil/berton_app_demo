@@ -4,7 +4,13 @@ const Char = require('../models/char');
 
 // get characters list from the db
 router.get('/chars', function (req, res, next) {
-  res.send({ type: 'GET' });
+  Char.geoNear(
+      { type: 'Point', coordinates: [parseFloat(req.query.lng), parseFloat(req.query.lat)] },
+      { maxDistance: 100000, spherical: true }
+    ).then(function (chars) {
+    res.send(chars);
+  });
+
 });
 
 // add a new character list to the db
